@@ -1,42 +1,21 @@
 require("dotenv").config();
-const envalid = require("envalid");
-const { str, port, bool, makeValidator } = envalid;
 
-const mongoUri = makeValidator((value) => {
-  const regex =
-    /^(mongodb:\/\/|mongodb\+srv:\/\/)([^:]+:[^@]+@)?([^\/?]+)(\/[^?]*)?(\?.*)?$/;
-  if (!regex.test(value)) {
-    throw new Error("Invalid MongoDB URI format");
+function validateEnv() {
+  const PORT = process.env.PORT || 8080;
+  const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/at";
+
+  const portNum = parseInt(PORT, 10);
+  if (isNaN(portNum) || portNum < 0 || portNum > 65535) {
+    throw new Error(
+      `Invalid PORT: "${PORT}" - must be a number between 0 and 65535`,
+    );
   }
-  return value;
-});
 
-const env = envalid.cleanEnv(process.env, {
-  PORT: port({ default: 8080 }),
+  if (typeof MONGO_URI !== "string" || MONGO_URI.trim() === "") {
+    throw new Error("MONGO_URI must be a non-empty string");
+  }
 
-  MONGO_URI: mongoUri({
-    default: "mongodb://localhost:27017/at",
-    desc: "MongoDB connection string",
-  }),
+  return { PORT: portNum, MONGO_URI };
+}
 
-  NODE_ENV: str({
-    choices: ["development", "production", "test"],
-    default: "development",
-    desc: "Runtime environment",
-  }),
-
-  JWT_SECRET: str({
-    desc: "JWT signing secret (required in production)",
-    default: undefined,
-  }),
-
-  LOG_LEVEL: str({
-    choices: ["error", "warn", "info", "debug"],
-    default: process.env.NODE_ENV === "production" ? "info" : "debug",
-    desc: "Logging level",
-  }),
-
-  ENABLE_LOGGING: bool({ default: true }),
-});
-
-module.exports = env;
+module.exports = validateEnv();
