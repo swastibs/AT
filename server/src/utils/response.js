@@ -7,39 +7,22 @@ exports.successResponse = (res, options = {}) => {
     ...extra
   } = options;
 
-  const response = {
-    success: true,
-    statusCode,
-    message,
+  const response = { success: true, statusCode, message, ...extra };
 
-    ...extra,
-  };
-
-  if (data !== null && data !== undefined) {
-    response.data = data;
-  }
-
-  if (pagination) {
-    response.pagination = pagination;
-  }
+  if (data !== null && data !== undefined) response.data = data;
+  if (pagination) response.pagination = pagination;
 
   return res.status(statusCode).json(response);
 };
 
 exports.errorResponse = (res, statusCode, message, errors = null) => {
-  const response = {
-    success: false,
-    statusCode,
-    message,
-  };
+  const response = { success: false, statusCode, message };
 
   if (errors) {
-    let errorArray = Array.isArray(errors) ? errors : [errors];
-    response.errors = errorArray.map((err) => {
-      if (typeof err === "string") {
-        return { message: err };
-      }
+    const errorArray = Array.isArray(errors) ? errors : [errors];
 
+    response.errors = errorArray.map((err) => {
+      if (typeof err === "string") return { message: err };
       return err;
     });
   }
