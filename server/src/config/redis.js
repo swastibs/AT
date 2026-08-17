@@ -1,20 +1,22 @@
 const Redis = require("ioredis");
-
 const { REDIS_HOST, REDIS_PORT } = require("./envConfig");
 const chalk = require("chalk");
 
 const redis = new Redis({
   host: REDIS_HOST,
-  port: REDIS_PORT,
+  port: Number(REDIS_PORT),
+  retryStrategy(times) {
+    const delay = Math.min(times * 50, 2000);
+    return delay;
+  },
+});
+
+redis.on("ready", () => {
+  console.log(chalk.green("Redis connected"));
 });
 
 redis.on("error", (error) => {
-  console.log(chalk.red.bold("Redis connection failed"), error);
-  process.exit(1);
-});
-
-redis.on("connect", () => {
-  console.log(chalk.green("Redis connected"));
+  console.error(chalk.red.bold("Redis error:"), error);
 });
 
 module.exports = redis;
