@@ -1,10 +1,11 @@
 require("dotenv").config();
 
 const PORT = process.env.PORT || 8080;
-const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://localhost:27017/at";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/at";
 const REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
 const NODE_ENV = process.env.NODE_ENV || "development";
+const JWT_SECRET = process.env.JWT_SECRET || "nLzXqimZn6ETLqEOqDDyw0owYh7W8PgyLvjLz5dpfxDvyc0Ck2RgniTBhyFs2qT2YzwUjmYjzjpF4dgVR3aX33";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 
-module.exports = { PORT, MONGO_URI, REDIS_HOST, REDIS_PORT, NODE_ENV };
+module.exports = { PORT, MONGO_URI, REDIS_HOST, REDIS_PORT, NODE_ENV, JWT_SECRET, JWT_EXPIRES_IN };

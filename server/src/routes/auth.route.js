@@ -1,7 +1,7 @@
 const authRouter = require("express").Router();
 const { validate } = require("express-validation");
-const { signup } = require("../controllers/auth.controller.js");
-const { signupSchema } = require("../validations/auth.validation");
+const { signup, login } = require("../controllers/auth.controller.js");
+const { signupSchema, loginSchema } = require("../validations/auth.validation");
 
 authRouter.post(
   "/signup",
@@ -9,4 +9,9 @@ authRouter.post(
   signup,
 );
 
+authRouter.post(
+  "/login",
+  validate(loginSchema, {}, { abortEarly: false }),
+  login,
+);
 module.exports = authRouter;

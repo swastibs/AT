@@ -10,7 +10,6 @@ const successResponse = (
     message,
     data,
     errors: null,
-    timestamp: new Date().toISOString(),
     pagination,
   };
   return res.status(statusCode).json(response);

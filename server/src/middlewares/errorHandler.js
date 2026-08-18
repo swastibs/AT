@@ -22,7 +22,6 @@ const errorHandler = (err, req, res, next) => {
       success: false,
       message,
       errors,
-      timestamp: new Date().toISOString(),
       pagination: null,
     });
   };
