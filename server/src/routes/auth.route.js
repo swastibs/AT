@@ -1,6 +1,7 @@
 const authRouter = require("express").Router();
 const { validate } = require("express-validation");
-const { signup, login } = require("../controllers/auth.controller.js");
+const { signup, login, logout } = require("../controllers/auth.controller.js");
+const { protect } = require("../middlewares/auth");
 const { signupSchema, loginSchema } = require("../validations/auth.validation");
 
 authRouter.post(
@@ -14,4 +15,7 @@ authRouter.post(
   validate(loginSchema, {}, { abortEarly: false }),
   login,
 );
+
+authRouter.post("/logout", protect, logout);
+
 module.exports = authRouter;

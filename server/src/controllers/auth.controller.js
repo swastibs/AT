@@ -5,6 +5,7 @@ const { successResponse, createdResponse } = require("../utils/response");
 const User = require("../models/User.model");
 const AppError = require("../utils/AppError");
 const { JWT_SECRET, JWT_EXPIRES_IN } = require("../config/envConfig");
+const { blacklistToken } = require("../utils/tokenBlacklist");
 
 const signToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
@@ -36,4 +37,18 @@ exports.login = catchAsync(async (req, res, next) => {
   const token = signToken(user._id);
 
   return successResponse(res, "User logged in successfully", { user, token });
+});
+
+exports.logout = catchAsync(async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer "))
+    throw new AppError("No token provided", 401);
+
+  const token = authHeader.split(" ")[1];
+  const decoded = jwt.decode(token);
+  if (!decoded || !decoded.exp) throw new AppError("Invalid token format", 400);
+
+  await blacklistToken(token, decoded.exp);
+
+  return successResponse(res, "Logged out successfully");
 });
