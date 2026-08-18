@@ -13,11 +13,17 @@
   "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "chalk": "^4.1.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-validation": "^4.1.1",
     "ioredis": "^6.0.0",
-    "mongoose": "^9.9.2"
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.2",
+    "morgan": "^1.11.0",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
